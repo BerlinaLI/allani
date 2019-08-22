@@ -22,13 +22,13 @@
 				var container, stats;
 				var camera, scene, renderer, materialDepth;
 				var sphereMesh;
-				var sunPosition = new THREE.Vector3( 0, 1000, - 1000 );
+				var sunPosition = new THREE.Vector3( 0, 100, - 100 );
 				var screenSpacePosition = new THREE.Vector3();
 				var mouseX = 0, mouseY = 0;
 				var postprocessing = { enabled: true };
 				var orbitRadius = 200;
 				var bgColor = 0x000511;
-				var sunColor = 0xffee00;
+				var sunColor = 0xf5ef98;
 				// Use a smaller size for some of the god-ray render targets for better performance.
 				var godrayRenderTargetResolutionMultiplier = 1.0 / 4.0;
 				init();
@@ -56,9 +56,11 @@
 					sphereMesh = new THREE.Mesh( geo, materialScene );
 					sphereMesh.scale.multiplyScalar( 20 );
 					scene.add( sphereMesh );
+
+					// scene.background = new THREE.Color(0x020202);
 					//
 					renderer = new THREE.WebGLRenderer();
-					renderer.setClearColor( 0xffffff );
+					renderer.setClearColor( 0x020202 );
 					renderer.setPixelRatio( window.devicePixelRatio );
 					renderer.setSize( window.innerWidth, window.innerHeight );
 					container.appendChild( renderer.domElement );
@@ -158,9 +160,10 @@
 					} );
 					postprocessing.godraysFakeSunUniforms.bgColor.value.setHex( bgColor );
 					postprocessing.godraysFakeSunUniforms.sunColor.value.setHex( sunColor );
-					postprocessing.godrayCombineUniforms.fGodRayIntensity.value = 0.75;
+					// size of sun
+					postprocessing.godrayCombineUniforms.fGodRayIntensity.value = 0.8;
 					postprocessing.quad = new THREE.Mesh(
-						new THREE.PlaneBufferGeometry( 1.0, 1.0 ),
+						new THREE.PlaneBufferGeometry( 1, 1 ),
 						postprocessing.materialGodraysGenerate
 					);
 					postprocessing.quad.position.z = - 9900;
@@ -235,7 +238,7 @@
 						renderer.render( postprocessing.scene, postprocessing.camera );
 						// -- Render god-rays --
 						// Maximum length of god-rays (in texture space [0,1]X[0,1])
-						var filterLen = 1.0;
+						var filterLen = 0.5;
 						// Samples taken by filter
 						var TAPS_PER_PASS = 6.0;
 						// Pass order could equivalently be 3,2,1 (instead of 1,2,3), which
