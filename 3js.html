@@ -16,6 +16,7 @@
 			import * as THREE from '/js/three.module.js';
 			import Stats from '/js/stats.module.js';
 			import { OBJLoader } from '/js/OBJLoader.js';
+			import { MTLLoader } from '/js/MTLLoader.js';
 			import { GodRaysFakeSunShader, GodRaysDepthMaskShader, GodRaysCombineShader, GodRaysGenerateShader } from '/js/GodRaysShader.js';
 
 
@@ -43,14 +44,42 @@
 					//
 					materialDepth = new THREE.MeshDepthMaterial();
 					var materialScene = new THREE.MeshBasicMaterial( { color: 0x000000 } );
+
 					// tree
 					var loader = new OBJLoader();
-					loader.load( '/asset/bear_sm.obj', function ( object ) {
+					loader.load( '/asset/01.obj', function ( object ) {
 						object.material = materialScene;
 						object.position.set( 0, - 150, - 150 );
 						object.scale.multiplyScalar( 20 );
 						scene.add( object );
 					} );
+
+					// new MTLLoader()
+					// .setPath( 'models/obj/male02/' )
+					// .load( 'male02_dds.mtl', function ( materials ) {
+					// 	materials.preload();
+					// 	new OBJLoader()
+					// 		.setMaterials( materials )
+					// 		.setPath( 'models/obj/male02/' )
+					// 		.load( 'male02.obj', function ( object ) {
+					// 			object.position.y = - 95;
+					// 			scene.add( object );
+					// 		}, onProgress, onError );
+					// } );
+
+					new MTLLoader()
+					.setPath( '/asset/' )
+					.load( '01.mtl', function ( materials ) {
+						materials.preload();
+						new OBJLoader()
+							.setMaterials( materials )
+							.setPath( '/asset/' )
+							.load( '01.obj', function ( object ) {
+								object.position.y = - 95;
+								scene.add( object );
+							});
+					} );
+
 					// sphere
 					var geo = new THREE.SphereBufferGeometry( 1, 20, 10 );
 					sphereMesh = new THREE.Mesh( geo, materialScene );
